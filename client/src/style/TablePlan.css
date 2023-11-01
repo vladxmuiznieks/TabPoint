@@ -1,0 +1,59 @@
+
+.table-plan-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.stage-container {
+    border: 1px solid #ccc;
+    overflow: hidden;
+    background-color: #f7f7f7;
+    max-width: 100vw;
+    max-height: 100vh;
+    position: relative;
+}
+
+
+.stage-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.barrier {
+    fill: darkgray;
+    cursor: pointer;
+    stroke-width: 2px;
+    stroke: #333;
+}
+
+.barrier-text {
+    fill: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.rectangle-table {
+    fill: lightgray;
+    stroke-width: 2px;
+    stroke: #333;
+    cursor: pointer;
+}
+
+.round-table {
+    fill: lightgray;
+    stroke-width: 2px;
+    stroke: #333;
+    cursor: pointer;
+}
+
+.table-number-text {
+    fill: #333;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
