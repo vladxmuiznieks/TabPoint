@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import TableSelect from '../components/TableSelect';
 import '../style/PaymentOverlay.css';
 import { addTab, fetchTables, addSale } from '../redux/store';
+import ReactDOM from 'react-dom';
+import Receipt from '../components/Receipt';
 
 const PaymentOverlay = ({ totalCost =0, cartItems, closeModal }) => {
   const [amountPaid, setAmountPaid] = useState(0);
   const dispatch = useDispatch();
 
-  // Retrieve the selectedTable from the state
+  //SelectedTable from the state
   const selectedTable = useSelector(state => state.rootReducer.selectedTable);
   console.log('Selected Table in Payment Overlay:', selectedTable);
 
@@ -28,11 +30,11 @@ const PaymentOverlay = ({ totalCost =0, cartItems, closeModal }) => {
         changeOwed,
         tableNo: selectedTable.tableNumber,
      };
-     
+     handlePrintReceipt(saleDetails);
     
 
       console.log(saleDetails);
-      dispatch(addSale(saleDetails)); // Add sale to the database
+      dispatch(addSale(saleDetails)); 
       dispatch({ type: 'CLEAR_CART' });
       closeModal();
     } else {
@@ -68,9 +70,36 @@ const PaymentOverlay = ({ totalCost =0, cartItems, closeModal }) => {
       alert('Please select a table before adding to tab');
     }
   };
+
+  const ReceiptPortal = ({ sale, onClose }) => {
+    useEffect(() => {
+      const printWindow = window.open('', '_blank', 'height=600,width=800');
+    
+      ReactDOM.render(<Receipt sale={sale} />, printWindow.document.body, () => {
+        printWindow.focus(); 
+        printWindow.print(); 
+        printWindow.onafterprint = () => {
+          printWindow.close(); // 
+          onClose();
+        };
+      });
+      
+    }, [sale, onClose]);
+ 
+    return null;
+  }
+
+  const handlePrintReceipt = (sale) => {
+
+    ReactDOM.render(
+      <ReceiptPortal sale={sale} onClose={() => ReactDOM.unmountComponentAtNode(document.getElementById('receipt-root'))} />,
+      document.getElementById('receipt-root')
+    );
+  };
   
 
   return (
+    
     <div className="payment-overlay">
       <div>
         <input 
@@ -79,12 +108,14 @@ const PaymentOverlay = ({ totalCost =0, cartItems, closeModal }) => {
           onChange={handleAmountPaidChange} 
           placeholder="Enter amount paid"
         />
+        <div id="receipt-root"></div>
         <TableSelect />
         {changeOwed > 0 && <p>Change Owed: €{changeOwed.toFixed(2)}</p>}
         <button className="confirm-btn" onClick={handlePayment}>Confirm Payment</button>
         <button className="add-to-tab-btn" onClick={handleAddToTab}>Add to Tab</button>
         <button className="cancel-btn" onClick={closeModal}>Cancel</button>
       </div>
+      
     </div>
   );
 };

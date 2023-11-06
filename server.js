@@ -11,6 +11,7 @@ import tabRoutes from './routes/tabRoutes.js';
 import tablePlanRoutes from './routes/tablePlanRoutes.js';
 import salesRoutes from './routes/salesRoutes.js';
 import authMiddleware from './middleware/authMiddleware.js';
+import settingsRoutes from './routes/settingsRoutes.js';
 
 import errorMiddleware from './middleware/errorMiddleware.js';
 
@@ -34,6 +35,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/tabs',tabRoutes);
 app.use('/api/table-plans',tablePlanRoutes);
 app.use('/api/sales',salesRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // port
 const PORT = 5000 || process.env.PORT 

@@ -1,7 +1,7 @@
-// Initial categories
+
 const initialCategories = ['beer', 'wine', 'spirits', 'food', 'misc'];
 
-// Category reducer
+
 const categoryReducer = (state = initialCategories, action) => {
   switch (action.type) {
     case 'ADD_CATEGORY':

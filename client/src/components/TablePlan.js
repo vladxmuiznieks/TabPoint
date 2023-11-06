@@ -16,7 +16,7 @@ function TablePlan() {
     const [barriers, setBarriers] = useState([]);
     const [selectedBarrier, setSelectedBarrier] = useState(null);
     const transformerRef = useRef(null);
-    const [scale, setScale] = useState(1);  // Starting zoom level at 1 (no zoom)
+    const [scale, setScale] = useState(1);  // Starting zoom level at 1 (zero)
     const stageWidth = 1000;
     const stageHeight = 600;
     const minScale = 0.5; 

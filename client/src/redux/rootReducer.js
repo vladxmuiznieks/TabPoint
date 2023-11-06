@@ -9,6 +9,9 @@ import changeOwedReducer from './changeOwedReducer';
 import tablesReducer from './tablesReducer'; 
 import selectedTableReducer from './selectedTableReducer';
 import shortCutReducer from './shortCutReducer';
+import settingsReducer from './settingsReducer';
+import salesReducer from './salesReducer';
+
 
 const rootReducer = combineReducers({
   loading: loadingReducer,
@@ -21,6 +24,8 @@ const rootReducer = combineReducers({
   selectedTable: selectedTableReducer,
   tabs: tabsReducer,
   shortcuts: shortCutReducer,
+  settings: settingsReducer,
+  sales: salesReducer,
 });
 
 export default rootReducer;

@@ -1,11 +1,9 @@
-// tablePlanController.js
-
 import tablePlanModel from '../models/tablePlanModel.js';
 
 
 export const getTablePlanController = async (req, res) => {
     try {
-        const tablePlan = await tablePlanModel.findOne().sort({ _id: -1 });  // This fetches the latest entry
+        const tablePlan = await tablePlanModel.findOne().sort({ _id: -1 });  // Fetches the latest entry
         res.json(tablePlan);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -13,7 +11,7 @@ export const getTablePlanController = async (req, res) => {
 }
 
 
-// Create a new table plan
+
 export const createTablePlanController = async (req, res) => {
     const newTablePlan = new tablePlanModel({
         tables: req.body.tables
@@ -49,7 +47,7 @@ export const upsertTablePlanController = async (req, res) => {
 }
 
 
-// Delete a specific table from the table plan
+
 export const deleteTableController = async (req, res) => {
     const tableId = req.params.tableId;
     try {

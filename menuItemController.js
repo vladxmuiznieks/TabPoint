@@ -15,7 +15,7 @@ export const getMenuItemController = async (req, res) => {
 
 export const addMenuItemController = async (req, res) => {
     try {
-        const newMenuItem = new Product(req.body);  // Using the Product model
+        const newMenuItem = new Product(req.body);  
         await newMenuItem.save();
         res.status(201).json({ message: "Product added successfully!" });
     } catch (error) {

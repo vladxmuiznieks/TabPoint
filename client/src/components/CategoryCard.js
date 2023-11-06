@@ -10,7 +10,7 @@ const CategoryCard = ({ categoryName, index }) => {
           <Card
             title={categoryName}
           >
-            <Button onClick={() => {/* TODO: Open rename modal */}}>Rename</Button>
+            <Button onClick={() => {/*rename modal */}}>Rename</Button>
           </Card>
           <div {...provided.dragHandleProps}></div>
         </div>

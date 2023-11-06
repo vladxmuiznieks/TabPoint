@@ -16,6 +16,8 @@ const MenuItemPage = () => {
   const [newCategory, setNewCategory] = useState("");
   const [editModalVisible, setEditModalVisible] = useState(false);
 const [currentEditItem, setCurrentEditItem] = useState(null);
+const [searchTerm, setSearchTerm] = useState("");
+
 
   
   const categories = useSelector(state => {
@@ -37,13 +39,24 @@ const [currentEditItem, setCurrentEditItem] = useState(null);
       console.error(error);
       dispatch({ type: 'LOADING_HIDE' });
     }
-  }, [dispatch]); // useCallback dependency array
+  }, [dispatch]); 
   
 
 useEffect(() => {
   getAllData();
   dispatch(loadCategories());
-}, [dispatch, getAllData]); // added getAllData to the dependency array
+}, [dispatch, getAllData]); 
+
+const getFilteredData = useCallback(() => {
+  if (!searchTerm) {
+    return data;
+  }
+  return data.filter(item =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+}, [data, searchTerm]);
+
+const filteredData = getFilteredData();
 
 
   const columns = [
@@ -53,7 +66,7 @@ useEffect(() => {
       dataIndex: ['category', 'name'],
       key: 'category',
       filters: categories.map(category => ({ text: category.name, value: category._id })),
-      onFilter: (value, record) => record.category._id === value,
+      onFilter: (value, record) => record.category?._id === value,
     },
     { title: 'Price €', dataIndex: 'price', key: 'price' },
     { title: '', dataIndex: 'image', render: (image, record) => <img src={image} alt={"record.name"} height="75" width="75" /> },
@@ -115,13 +128,13 @@ useEffect(() => {
   
 
   const handleEditButtonClick = (record) => {
-    console.log("Edit button clicked, record:", record); // Debug line
+    console.log("Edit button clicked, record:", record); 
     setCurrentEditItem(record);
     setEditModalVisible(true);
   };
   
   useEffect(() => {
-    console.log("currentEditItem changed, new value:", currentEditItem); // Debug line
+    console.log("currentEditItem changed, new value:", currentEditItem); 
     if(currentEditItem) {
       setEditModalVisible(true);
     }
@@ -209,8 +222,17 @@ useEffect(() => {
 </Modal>
       <div className="d-flex justify-content-between">
         <h1>Menu Items</h1>
+        <div className="search-bar">
+  <Input
+    placeholder="Search by name..."
+    value={searchTerm}
+    onChange={e => setSearchTerm(e.target.value)}
+    style={{ width: 200, marginBottom: 16 }}
+  />
+</div>
         <div>
           {checkPermission('canAddItem') && 
+          
   <Button 
     type="primary" 
     shape="round" 
@@ -219,6 +241,7 @@ useEffect(() => {
   >
     + Add New Item
   </Button>
+  
 }
 
           <Button type="secondary" shape="round" size="medium" onClick={openCategoryManagementModal} style={{ marginLeft: '10px' }}>
@@ -227,7 +250,7 @@ useEffect(() => {
         </div>
       </div>
 
-      <Table columns={columns} dataSource={data} bordered />
+      <Table columns={columns} dataSource={filteredData} bordered />
 
       {/* Add Item Modal */}
       <Modal title="+ Add New Item to Menu" visible={popupModal} onCancel={() => setPopupModal(false)} footer={false}>

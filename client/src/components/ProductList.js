@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Draggable } from 'react-beautiful-dnd';
 
 const { Meta } = Card;
-
+const placeholderImageUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCcwLprhD5TihUo3e4H82rSk7hk5LD_5PGwA&usqp=CAU';
 // ProductCard.js
 export const ProductCard = ({ product, cardSize, index, isRearranging, colSpan, imageVisible = true }) => {
   console.log('Rendering ProductCard:', product.name);
@@ -27,7 +27,12 @@ export const ProductCard = ({ product, cardSize, index, isRearranging, colSpan, 
             >
               {!imageVisible || shouldHideImage ? null : (
     <img 
-      src={product.image} 
+      className="card-image"
+      src={product.image || placeholderImageUrl}
+      onError={(e) => {
+        e.target.onerror = null; 
+        e.target.src = placeholderImageUrl; 
+      }}
       alt={product.name} 
       style={{ 
         width: colSpan > 4 ? '50%' : '100%', 
@@ -36,7 +41,11 @@ export const ProductCard = ({ product, cardSize, index, isRearranging, colSpan, 
     />
 )}
 
-              <Meta title={product.name} description={product.price ? `${product.price} €` : ''} />
+            <Meta
+              className="card-text"
+              title={product.name}
+              description={product.price ? `${product.price} €` : ''}
+            />
             </Card>
           </div>
         </div>
@@ -45,12 +54,10 @@ export const ProductCard = ({ product, cardSize, index, isRearranging, colSpan, 
   );
 };
 
-
-// ProductList.js
 const ProductList = ({ products, cardSize, colSpan, isRearranging }) => {
 
   
-  console.log("colSpan in ProductList: ", colSpan); // Debug point 1
+  console.log("colSpan in ProductList: ", colSpan); 
 
   return (
     <Row gutter={[16, 16]}>

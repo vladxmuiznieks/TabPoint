@@ -3,10 +3,12 @@ import { Table } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadTabs, removeTab } from '../redux/store.js'; 
 import DefaultTemplate from '../components/DefaultTemplate';
-import { DeleteOutlined, EuroOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EuroOutlined, PrinterOutlined } from '@ant-design/icons';
 import CloseTabOverlay from '../components/CloseTab.js'; 
 import { Button } from 'antd';  
 import { useNavigate } from 'react-router-dom'; 
+import Receipt from '../components/Receipt';
+import ReactDOM from 'react-dom';
 
 const TabList = () => {
   const dispatch = useDispatch();
@@ -29,26 +31,32 @@ const TabList = () => {
     setIsCloseTabOverlayVisible(false);
   };
 
+  const handlePrintReceipt = (tab) => {
+    const saleDetails = {
+      ...tab,
+      amountPaid: 0, // zero for printing from open tabs
+      changeOwed: 0, // 0 since no payment is being processed
+    };
+  
+  
+    const printWindow = window.open('', '_blank', 'height=600,width=800');
+    ReactDOM.render(<Receipt sale={saleDetails} />, printWindow.document.body, () => {
+      printWindow.focus(); 
+      printWindow.print(); 
+      printWindow.onafterprint = printWindow.close; 
+    });
+  };
   
 
-  // const handleUpdate = async (tabId, newTabData) => {
-  //   try {
-  //     await dispatch(updateTab(tabId, newTabData));
-  //     // Optionally, you can add a notification here to inform the user of the successful update.
-  //   } catch (error) {
-  //     console.error('Failed to update tab:', error);
-  //     // Optionally, you can add a notification here to inform the user of the error.
-  //   }
-  // };
+  
+
   
 
   const handleRemove = async (tabId) => {
     try {
       await dispatch(removeTab(tabId));
-      // Optionally, you can add a notification here to inform the user of the successful removal.
     } catch (error) {
       console.error('Failed to remove tab:', error);
-      // Optionally, you can add a notification here to inform the user of the error.
     }
   };
   
@@ -98,6 +106,7 @@ const TabList = () => {
           <div>
              <EuroOutlined style={{cursor: "pointer"}} onClick={() => handleOpenCloseTabOverlay(record)} />
             <DeleteOutlined style={{ cursor: "pointer" }} onClick={() => handleRemove(record._id)} />
+           <PrinterOutlined style={{ cursor: "pointer" }} onClick={() => handlePrintReceipt(record)} />
          
             
           </div>
@@ -118,18 +127,22 @@ const goToTablePlan = () => {
   return (
     <div>
       <DefaultTemplate>
-        <h1>Tab List</h1>
-        <Button type="primary" onClick={goToTablePlan}>Tables</Button>
+        {/*wrap title and buttons*/}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <h1 style={{ margin: 0 }}>Tab List</h1>
+          <Button type="primary" onClick={goToTablePlan}>Tables</Button>
+        </div>
 
+        {/*  */}
         <Table columns={columns} dataSource={tabs} bordered expandable={{ expandedRowRender }} rowKey="_id" />
         {isCloseTabOverlayVisible && currentTab && 
           <CloseTabOverlay 
-            tab={currentTab} // passed the current tab data to the overlay component
-            closeModal={handleCloseCloseTabOverlay} // passed the close handler to the overlay component
+            tab={currentTab}
+            closeModal={handleCloseCloseTabOverlay}
           />}
       </DefaultTemplate>
     </div>
   );
 };
 
-export default TabList;
+export default TabList

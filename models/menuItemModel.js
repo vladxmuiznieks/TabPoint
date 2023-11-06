@@ -24,6 +24,7 @@ const productSchema = new mongoose.Schema({
     },
     image: { 
         type: String,
+        default: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPTO17Sj-VnVTnWa9Ovz4s_Yuf6KMaX77WPA&usqp=CAU', // Placeholder image path
         required: true
     }
 }, { 

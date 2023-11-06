@@ -3,9 +3,12 @@ import DefaultTemplate from '../components/DefaultTemplate';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from 'antd';
 import { DeleteOutlined, LeftSquareOutlined, RightSquareOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom'; 
 import PaymentOverlay from '../components/PaymentOverlay'
+import { Button } from 'antd';
 
 const Sale = () => {
+  const navigate = useNavigate(); 
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.rootReducer);
   const [isPaymentOverlayOpen, setPaymentOverlayOpen] = useState(false)
@@ -77,9 +80,20 @@ const Sale = () => {
 
   return (
     <DefaultTemplate>
-      <h2>Open Sale € {totalCost.toFixed(2)}</h2>
+    {/*wrap button and the heading*/}
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+      <h2 style={{ margin: 0 }}>Open Sale € {totalCost.toFixed(2)}</h2>
+      <Button type="primary"
+        className="all-sales-btn"
+        onClick={() => navigate('/sales-display')}
+      >
+        All Sales
+      </Button>
+    </div>
       <Table columns={columns} dataSource={cartItems} bordered />
       <button className="proceed-to-payment-btn" onClick={openPaymentOverlay}>Proceed to Payment</button>
+      
+      
       
 
 
@@ -91,6 +105,7 @@ const Sale = () => {
         />
       )}
     </DefaultTemplate>
+    
   );
   
 };

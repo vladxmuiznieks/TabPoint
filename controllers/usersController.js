@@ -23,7 +23,7 @@ export const loginController = async (req, res) => {
             console.log("User Verified Status:", user.verified);
             if(user.verified) {
                 console.log("Login successful for user:", user.name);
-                // Create JWT token here
+                // Create JWT token 
                 const token = jwt.sign({ id: user._id, name: user.name, role: user.role }, 'testing123123', { expiresIn: '8h' });
                 res.status(200).json({ message: 'Login successful', user, token });
             } else {

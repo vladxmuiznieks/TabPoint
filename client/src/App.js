@@ -9,6 +9,8 @@ import TabList from './components/TabList.js';
 import TabDetail from './components/TabDetails.js';
 import TabForm from './components/TabForm.js';
 import TablePlan from './components/TablePlan.js';
+import SettingsPage from './components/SettingsPage.js';
+import SalesDisplay from './components/SalesDisplay.js';
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
                 <Homepage/>
               </ProtectedRoute>
             }/>
+            <Route path="/sales-display" element={<SalesDisplay />} />
             <Route path="/menu" element={<MenuItemPage/>}/>
             <Route path="/sale" element={<Sale/>}/>
             <Route path="/login" element={<Login/>}/>
@@ -29,6 +32,7 @@ function App() {
             <Route path="/tabs" element={<ProtectedRoute><TabList/></ProtectedRoute>}/>
             <Route path="/tabs/:id" element={<ProtectedRoute><TabDetail/></ProtectedRoute>}/>
             <Route path="/create-tab" element={<ProtectedRoute><TabForm/></ProtectedRoute>}/>
+            <Route path="/settings" element={<ProtectedRoute><SettingsPage/></ProtectedRoute>}/>
           </Routes>
         </BrowserRouter>
       </UserProvider>

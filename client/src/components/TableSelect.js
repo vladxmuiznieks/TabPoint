@@ -17,12 +17,11 @@ const TableSelect = () => {
   console.log('Selected Table:', useSelector((state) => state.rootReducer.selectedTable));
 
 
-  // Get the current tab ID from your Redux store
   const currentTabId = useSelector(state => state.rootReducer.selectedTable?.tabId);
 
   const handleTableSelect = async (table) => {
     setLoading(true);
-    setError(null); // Resetting any previous error
+    setError(null); 
 
     dispatch({ type: 'SELECT_TABLE', payload: table });
 

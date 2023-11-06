@@ -1,0 +1,49 @@
+/* Receipt.module.css */
+.receipt {
+    width: 300px;
+    padding: 20px;
+    margin: auto;
+    background-color: #fff;
+    color: #000;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    border: 1px solid #ddd;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  }
+  
+  .receipt h1 {
+    font-size: 18px;
+    text-align: center;
+    margin: 10px 0;
+  }
+  
+  .receipt p {
+    margin: 5px 0;
+  }
+  
+  .receipt hr {
+    border: none;
+    border-top: 1px dashed #000;
+    margin: 10px 0;
+  }
+  
+  .receipt .item {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+  }
+  
+  .receipt .total,
+  .receipt .amountPaid,
+  .receipt .changeOwed {
+    font-weight: bold;
+    margin: 10px 0;
+  }
+  
+  .receipt .thankYou {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  

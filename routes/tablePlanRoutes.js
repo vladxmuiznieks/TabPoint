@@ -15,8 +15,6 @@ router.get("/", getTablePlanController);
 // Create a new table plan
 router.post("/", createTablePlanController);
 
-// Update the table plan
-// router.put("/", updateTablePlanController);
 
 // Delete a specific table from the table plan
 router.delete("/:tableId", deleteTableController);

@@ -18,13 +18,13 @@ const handleSubmit = async (value) => {
         console.log("Type of received PIN:", typeof value.pin);
         console.log("Submitting PIN:", value);
         
-        // Converts pin to string before sending
+        // Convert pin to string
         value.pin = String(value.pin).trim();
         console.log("Value passed to Axios:", value);
         
         dispatch({ type: 'LOADING_SHOW' });
         
-        // Passes the pin directly as a string
+  
         const res = await axios.post("/api/users/login", { pin: value.pin });
         console.log("Response from server:", res);
         console.log('Response data:', res.data);

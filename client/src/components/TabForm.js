@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addTab } from '../redux/store.js'; // assuming addTab is exported from store.js
-
+import { addTab } from '../redux/store.js'; 
 
 
 const TabForm = () => {

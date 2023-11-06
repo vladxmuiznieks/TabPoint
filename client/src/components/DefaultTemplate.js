@@ -68,6 +68,7 @@ const DefaultTemplate = ({ children }) => {
 >
    <Menu.Item key="tabPointEPOS">
     TabPoint EPOS
+    <Link to="/settings"></Link>
   </Menu.Item>
   
   <Menu.Item key="/" icon={<HomeOutlined/>}>

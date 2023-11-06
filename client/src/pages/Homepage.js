@@ -38,7 +38,7 @@ const Homepage = () => {
   const [showProductModal, setShowProductModal] = useState(false);
   const [shortcutCards, setShortcutCards] = useState([]);
   const [selectedShortcutProduct, setSelectedShortcutProduct] = useState(null);
-  
+  const placeholderImageUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCcwLprhD5TihUo3e4H82rSk7hk5LD_5PGwA&usqp=CAU';
 
   const dispatch = useDispatch();
 
@@ -225,8 +225,9 @@ useEffect(() => {
   onCancel={() => setShowProductModal(false)}
   onProductSelect={handleProductSelect}
 />
+<div id="receipt-root"></div>
 
-        {/* Your category selection form here */}
+        {/*category selection form*/}
       </Modal>
       <DragDropContext onDragEnd={onDragEnd}>
         {activeCategory === null ? (
@@ -236,44 +237,24 @@ useEffect(() => {
                 {categories.map((categoryName, index) => (
                   <Col key={categoryName} xs={24} md={categoryColSpan}>
                     <Card
-                      className={`category-card ${activeCategory === categoryName ? 'active' : ''}`}
+                      className={`card ${activeCategory === categoryName ? 'active' : ''}`}
                       style={{ width: `${categoryCardSize.width}px`, height: `${categoryCardSize.height}px` }}
                       onClick={(e) => handleCategoryClick(e, categoryName)}
                     >
-                      <h2 style={{ fontSize: `${categoryCardFontSize}px` }}>{categoryName}</h2>
+                       <h2 className="card-text">{categoryName}</h2>
                     </Card>
                   </Col>
+                ))}{shortcutCards.map((product) => (
+                  <Col key={product._id} xs={24} md={categoryColSpan}>
+                    <ProductCard product={product} />
+                  </Col>
                 ))}
-                {shortcutCards.map(product => (
-  <Col key={product._id} xs={24} md={categoryColSpan}>
-    <Card
-      title={product.name}
-      bordered={false}
-      style={{
-        width: `${categoryCardSize.width}px`,
-        height: `${categoryCardSize.height}px`,
-        overflow: 'hidden'
-      }}
-    >
-      {showShortcutCard && 
-        <img 
-          alt={product.name} 
-          src={product.image} 
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover'
-          }}
-        />
-      }
-    </Card>
-  </Col>
-))}
+
 
                 {showShortcutCard && (
                   <Col xs={24} md={categoryColSpan}>
                     <Card
-                      className="shortcut-card"
+                      className="card"
                       style={{
                         width: `${categoryCardSize.width}px`,
                         height: `${categoryCardSize.height}px`,

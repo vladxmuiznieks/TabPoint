@@ -1,9 +1,6 @@
 import tabModel from '../models/tabModel.js';
 import SalesModel from '../models/salesModel.js'; // 
 
-// Controller to add a new tab
-// tabsController.js
-// tabsController.js
 export const addTabController = async (req, res) => {
   try {
     const { items, totalAmountDue, amountPaid, tableNo } = req.body;
@@ -11,7 +8,7 @@ export const addTabController = async (req, res) => {
     const existingTab = await tabModel.findOne({ tableNo });
 
     if (existingTab) {
-      // If a tab for the table already exists, update it
+      // If a tab for the table already exists update it
       existingTab.items = [...existingTab.items, ...items];
       existingTab.totalAmountDue += totalAmountDue;
       existingTab.amountPaid += amountPaid;
@@ -20,7 +17,7 @@ export const addTabController = async (req, res) => {
       await existingTab.save();
       res.status(200).json({ message: 'Tab updated successfully', tab: existingTab });
     } else {
-      // If no tab for the table exists, create a new one
+ 
       const changeOwed = amountPaid - totalAmountDue;
       const newTab = new tabModel({
         items,
@@ -41,7 +38,7 @@ export const addTabController = async (req, res) => {
 
 
 
-// Controller to get all tabs
+
 export const getAllTabsController = async (req, res) => {
   try {
     const tabs = await tabModel.find();
@@ -52,7 +49,7 @@ export const getAllTabsController = async (req, res) => {
   }
 };
 
-// Controller to get a tab by ID
+
 export const getTabByIdController = async (req, res) => {
   try {
     const tab = await tabModel.findById(req.params.id);
@@ -113,47 +110,45 @@ export const updateTabController = async (req, res) => {
         res.status(500).send({ message: 'Server error' });
     }
 };
+
+const calculateTotalCost = (items) => {
+  return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+};
+
+
 export const closeTabController = async (req, res) => {
   try {
-    const { id } = req.params;
-    
-    const tab = await tabModel.findById(id);
+    const tabId = req.params.tabId;
+    // Find the tab
+    const tab = await tabModel.findById(tabId);
 
-    if (tab) {
-      tab.dateClosed = new Date();
-      await tab.save();
-
-      // Calculate the total amount, amount paid, and change owed
-      const items = tab.items.map(item => ({ 
-        name: item.name, 
-        category: item.category, 
-        price: item.price, 
-        quantity: item.quantity 
-      }));
-      const totalAmountDue = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const amountPaid = tab.amountPaid || totalAmountDue; // Assuming amountPaid is stored in tab, update this as necessary
-      const changeOwed = amountPaid - totalAmountDue;
-
-      // Create a new sale record using the details from the closed tab
-      const sale = new SalesModel({
-        tabId: tab._id,
-        tableNo: tab.tableNo, 
-        items,
-        totalAmountDue,
-        amountPaid,
-        changeOwed,
-        saleDate: new Date(),
-      });
-
-      await sale.save();
-
-      res.status(200).json({ message: 'Tab closed and sale logged successfully', tab });
-    } else {
-      res.status(404).json({ message: 'Tab not found' });
+    if (!tab) {
+      return res.status(404).json({ message: "Tab not found" });
     }
+
+    // Calculate the total cost
+    const totalCost = calculateTotalCost(tab.items);
+
+    // Create a sale 
+    const sale = new SalesModel({
+      tabId: tab._id,
+      tableNo: tab.tableNo,
+      items: tab.items,
+      totalAmountDue: totalCost,
+      amountPaid: req.body.amountPaid,
+      changeOwed: req.body.amountPaid - totalCost,
+      saleDate: new Date(),
+    });
+
+    const savedSale = await sale.save();
+
+    // Sale is saved, delete the tab
+    await tabModel.findByIdAndDelete(tabId);
+
+    res.status(200).json({ message: "Sale completed and tab closed", sale: savedSale });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
+
 

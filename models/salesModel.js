@@ -7,7 +7,7 @@ const salesSchema = new mongoose.Schema({
         required: false
     },
     tableNo: {
-        type: Number,
+        type: String,
         required: false
     },
     

@@ -1,7 +1,5 @@
-// Initial state for tables
 const initialState = [];
 
-// Tables reducer
 const tablesReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'LOAD_TABLES':

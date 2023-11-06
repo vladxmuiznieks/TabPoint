@@ -17,7 +17,8 @@ function validateId(req, res, next) {
   router.get('/:id', validateId, getTabByIdController);
   router.put('/:id', validateId, updateTabController);
   router.delete('/:id', validateId, deleteTabController);
-  router.put('/closetab/:id', validateId, closeTabController);
+  router.put('/closetab/:tabId', validateId, closeTabController);
+  router.put('/closetab/:id', closeTabController);
 
 
 export default router;

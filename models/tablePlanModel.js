@@ -1,5 +1,3 @@
-// tablePlanModel.js
-
 import mongoose from 'mongoose';
 
 const tablePlanSchema = new mongoose.Schema({

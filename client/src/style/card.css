@@ -69,3 +69,37 @@
   margin-right: 0px;
   display: block; 
 }
+
+.card {
+  max-width: 150px;
+  max-height: 150px;
+  overflow: hidden; 
+  position: relative; 
+}
+
+.card-image {
+  width: 100%; 
+  height: auto; 
+  max-height: 120px;
+}
+
+.card-text {
+  font-size: 14px; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+}
+
+@media (max-width: 768px) {
+  .card {
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+  .card-image {
+    max-height: 80px;
+  }
+
+  .card-text {
+    font-size: 12px;
+  }
+}

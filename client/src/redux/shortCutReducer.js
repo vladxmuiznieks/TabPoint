@@ -1,5 +1,3 @@
-// shortCutReducer.js
-
 const initialState = [];
 
 const shortCutReducer = (state = initialState, action) => {

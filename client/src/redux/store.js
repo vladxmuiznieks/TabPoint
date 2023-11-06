@@ -4,16 +4,9 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer from './rootReducer';
 import axios from 'axios';
 
-
-
 // Initial categories
 const initialCategories = ['beer', 'wine', 'spirits', 'food', 'misc'];
 
-
-
-
-
-// Category reducer
 const categoryReducer = (state = initialCategories, action) => {
     switch (action.type) {
       case 'ADD_CATEGORY':
@@ -26,7 +19,6 @@ const categoryReducer = (state = initialCategories, action) => {
         return state;
     }
   };
-  
   
 
 // Combine reducers
@@ -50,8 +42,12 @@ const initialState = {
   categories: localStorage.getItem('categories') 
     ? JSON.parse(localStorage.getItem('categories')) 
     : initialCategories,
+    settings: {
+      barName: '',
+      thankYouMessage: '',
+      sales: [],
+    },
 };
-
 
 
 
@@ -162,35 +158,32 @@ export const loadCategories = () => async (dispatch) => {
   };
   
   
-  export const closeTab = ({ tabId, items, totalAmountDue, amountPaid, changeOwed }) => async (dispatch) => {
+  export const closeTab = (tabData) => async (dispatch) => {
     try {
       dispatch({ type: 'LOADING_SHOW' });
-  
-     
-      const response = await axios.put(`http://localhost:3000/api/tabs/closetab/${tabId}`, {
-        items,
-        totalAmountDue,
-        amountPaid,
-        changeOwed,
-      });
-  
-      console.log('Closed tab with ID:', tabId); 
-  
-
-      dispatch({
-        type: 'CLOSE_TAB',
-        payload: tabId,
-      });
+      const response = await axios.put(`http://localhost:3000/api/tabs/closetab/${tabData.tabId}`, tabData);
+      if (response.status === 200) {
+        dispatch({
+          type: 'CREATE_SALE',
+          payload: {
+            ...tabData,
+            saleDate: new Date(), 
+          },
+        });
+        dispatch({
+          type: 'CLOSE_TAB',
+          payload: tabData.tabId,
+        });
+      }
   
       dispatch({ type: 'LOADING_HIDE' });
-  
-     
     } catch (error) {
       console.error('Failed to close tab:', error);
-      console.error('Error response:', error.response);
       dispatch({ type: 'LOADING_HIDE' });
     }
   };
+  
+  
 
   
   export const getProductsByCategory = (categoryId) => async (dispatch) => {
@@ -281,20 +274,76 @@ export const loadCategories = () => async (dispatch) => {
   };
 
 
+export const fetchAllSales = () => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch('/api/sales'); 
+      const data = await response.json();
+      console.log('Data from fetchAllSales:', data);
 
-    
+      if (response.ok) {
+        dispatch({ type: 'FETCH_ALL_SALES_SUCCESS', payload: data });
+      } else {
+        throw new Error('Failed to fetch sales');
+      }
+    } catch (error) {
+      console.error('Fetch all sales failed:', error);
+      dispatch({ type: 'FETCH_ALL_SALES_FAILURE' });
+     
+    }
+  };
+};
+
+
+export const fetchXReport = () => async (dispatch) => {
+  try {
+    const response = await axios.get('/api/sales/reports/x');
+    dispatch({ type: 'FETCH_X_REPORT', payload: response.data });
+  } catch (error) {
+    console.error('Error fetching X report:', error);
+  }
+};
+
+
+export const fetchZReport = () => async (dispatch) => {
+  try {
+    const response = await axios.get('/api/sales/reports/z');
+    dispatch({ type: 'FETCH_Z_REPORT', payload: response.data });
+  } catch (error) {
+    console.error('Error fetching Z report:', error);
+  }
+};
+
+
+
+export const clearSales = (startDate, endDate) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/sales/clear', {
+        startDate,
+        endDate
+      });
+      dispatch({
+        type: 'SALES_CLEARED',
+        payload: response.data
+      });
+    } catch (error) {
+      throw new Error('Failed to clear sales');
+    }
+  };
+};
+
 
 // Middleware
 const middleware = [thunk];
 
-// Create store
 const store = legacy_createStore(
   finalReducer, 
   initialState,
+  
   composeWithDevTools(applyMiddleware(...middleware))
 );
 
-// Saving categories to local storage whenever they change
 store.subscribe(() => {
   localStorage.setItem('categories', JSON.stringify(store.getState().categories));
 });
